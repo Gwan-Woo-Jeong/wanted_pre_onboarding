@@ -1,70 +1,77 @@
-# Getting Started with Create React App
+SEB 27기 정관우
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- 구현한 방법과 이유에 대한 간략한 내용
+1. Toggle
+토글 상태에 따라 다른 애니메이션을 적용시키는게 핵심 과제였습니다.
+먼저, keyframes을 이용하여 토글 애니메이션을 구현했습니다. 버튼이 켜지고 그 다음 꺼지는 애니메이션 두 가지를 구현해야하기 때문에, state를 props로 전달하여 토글의 상태에 따라 켜지는 애니메이션과 꺼지는 애니메이션이 다르게 적용되도록 구현했습니다.
 
-## Available Scripts
+2. Modal
+모달의 켜지고 꺼짐을 상태로 두어 켜질 때, 화면 위로 모달 컴포넌트가 올라오도록 하였고 꺼졌을 때는 사라지도록 구현했습니다. 
 
-In the project directory, you can run:
+3. Tab
+세 개의 탭 중 하나만 선택되게 하는 것이 핵심 과제였습니다.
+각각의 탭의 선택 여부를 상태로 두어, 탭이 선택될 때 모든 탭의 state를 false로 리셋하고 선택된 탭의 state가 true로 변경되게 하였습니다.
 
-### `npm start`
+4. Tag
+인풋에 입력된 값을 엔터가 눌렸을 때, 태그 목록 상태에 추가되도록 하였습니다. 태그 목록 상태가 변경될 시, 컴포넌트가 리렌더링되어 배열 안의 태그들이 만들어지도록 구현했습니다. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+삭제 버튼을 누를 시, 클릭한 태그의 인덱스와 렌더링 된 컴포넌트의 key 인덱스를 비교하여 일치하는 값을 제거하도록 하였습니다. 이로 인해 태그 목록 상태가 변경되면, 컴포넌트가 다시 렌더링되어 삭제된 태그가 사라지도록 구현했습니다.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+5. AutoComplete
+먼저 자동 완성 될 단어들을 배열로 만들었습니다. 그리고, 인풋의 값이 변화할 때마다 배열을 순회하여 입력된 값의 철자를 포함하는 단어들을 추려냈습니다. 추려진 데이터를 상태로 저장하여 상태가 변경되었을 때, 자동 완성 목록이 업데이트 되도록 구현했습니다. 
 
-### `npm test`
+반대로, 입력된 인풋이 없거나 오른쪽 구석의 X 버튼을 누르거나 혹은 자동 완성 데이터와 일치하지 않으면 배열 상태를 빈 배열로 변경하여 자동 완성이 사라지게 만들었습니다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+6. ClickToEdit
+인풋에 입력되는 데이터를 상태로 저장한 뒤, 인풋이 비활성화 되면 입력 받은 상태를 아래 텍스트로 출력해주었습니다.
 
-### `npm run build`
+- 구현하면서 어려웠던 점과 해결 방법 (Error Handling Log)
+1. Toggle
+토글 상태(boolean)에 따라 다른 애니메이션이 적용되도록 구현하니, 처음에 컴포넌트가 마운트될 시, state의 값이 false로 생성되면서 꺼지는 애니메이션이 자동적으로 실행되는 버그가 생겼습니다. 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+이를 해결하기 위해, 버튼을 클릭했는지 여부를 판단하는 상태를 하나 더 만들었습니다. 버튼이 클릭 되었을 때만, 애니메이션이 실행되게 하여 문제를 해결할 수 있었습니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Tag
+인풋 창에 한글을 입력하고 엔터를 누를 시, 이벤트가 두 번 발생하는 버그가 있었습니다. 도무지 갈피를 잡을 수 없어 구글링을 해보았는데, 한글이나 중국어 같이 영어가 아닌 글자들은 한 글자가 영어보다 많은 정보를 담고 있기 때문에 키입력 순간부터 입력이 완료될 때 까지 시간이 걸리고, keydown 이벤트가 이미 발생된 뒤에도 진행중 일 수 있다... 그래서 글자가 중복되어 화면에 출력되는 현상이 발생한다는 사실을 알게 되었습니다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+대안으로 onKeyDown 대신 onKeyPress를 사용하여 위 문제를 해결할 수 있었습니다.
 
-### `npm run eject`
+- 자세한 실행 방법
+1. Toggle 
+    1 ) 버튼을 클릭 -> toggle (boolean) state가 true로 변경
+    2 ) toggle이 true일 경우, 버튼이 0px -> 55px로 이동하는 keyframe 애니메이션 작동
+    + 버튼 뒤의 표시바의 width 값이 0px -> 100px로 길어지는 keyframe 애니메이션 작동
+    3 ) keyframe 애니메이션이 그 상태로 정지되고, toggle이 true인 상태
+    4 ) 버튼을 다시 누르면, toggle이 false로 변경
+    5 ) toggle이 false일 경우, 버튼이 55px -> 0px로 이동하는 keyframe 애니메이션 작동
+    + 버튼 뒤의 표시바의 width 값이 100px -> 0px로 짧아지는 keyframe 애니메이션 작동
+    6 ) keyframe 애니메이션이 그 상태로 정지되고, toggle이 false인 상태
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Modal
+    1 ) 버튼을 클릭 -> isVisible (boolean) state가 true로 변경
+    2 ) isVisible이 true일 경우, 모달 창이 렌더
+    3 ) X 버튼이나 배경을 클릭 -> isVisible이 false로 변경되면서 모달 창 사라짐
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Tab
+    1 ) 각 Tab 1 / 2 / 3의 state (boolean) 생성
+    2 ) Tab2 클릭시, Tab 1 / 2 / 3의 state를 모두 false로 리셋
+    3 ) 그 후, Tab2의 state를 true로 변경되며 탭 활성화
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+4. Tag
+    1 ) 인풋 값 입력
+    2 ) 엔터 누를 시, 입력된 값을 상태 (array)에 저장
+    3 ) array가 변경될 시, array이 안에 있는 값을 태그로 렌더
+    4 ) 삭제 버튼을 누를 시, 삭제 버튼이 눌린 태그의 인덱스와 array에 있는 인덱스를 비교
+    5 ) 일치하는 값을 array에서 제거
+    6 ) array가 변경될 시, array이 안에 있는 값을 태그로 렌더
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+5. AutoComplete
+    1 ) 입력된 인풋 값을 상태로 저장
+    2 ) 입력 값 상태가 변경될 시, 자동 완성 목록 배열에서 일치하는 값들을 찾아 배열 상태로 저장
+    3 ) 자동 완성 배열 상태를 인풋 아래 렌더
+    4 ) 자동 완성 목록을 클릭 -> 입력 값 상태를 해당 단어로 변경 -> 자동 완성 목록 업데이트
+    5 ) 삭제 버튼 클릭 -> 입력 값 상태 빈 문자열 -> 자동 완성 목록 상태가 빈 배열이므로 자동 완성 창 제거
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+6. ClickToEdit
+    1 ) 입력된 인풋 값을 상태로 저장
+    2 ) 인풋이 비활성화 됐을 때, 입력 값 상태를 아래 문자로 렌더
